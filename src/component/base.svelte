@@ -1,6 +1,6 @@
 <script>
 	import Category from './category.svelte';
-	let { name, value, color, base } = $props();
+	let { name, value, base, test } = $props();
 </script>
 
 <div style="display: flex; flex-direction: column; align-items: start;">
@@ -8,7 +8,16 @@
 		style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem;"
 	>
 		<h1 style="font-size: x-large; font-weight: bold;">{name}</h1>
-		<input type="number" {name} {value} style="font-size: x-large; field-sizing: content;" />
+		<input
+			type="number"
+			{name}
+			{value}
+			style="font-size: x-large; field-sizing: content;"
+			onchange={(e) => {
+				test += 1;
+				console.log('changed', e.target.value);
+			}}
+		/>
 	</div>
 	{#each base.categories as cat}
 		<Category name={cat.name} value={cat.value} color={cat.color} category={cat} />

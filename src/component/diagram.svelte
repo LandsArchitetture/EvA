@@ -106,7 +106,7 @@
 				stroke-width={STROKEWIDTH.inner}
 				stroke-dasharray={`${base.percent * CIRCUMFERENCES.inner} ${CIRCUMFERENCES.inner}`}
 				stroke-dashoffset={calculateOffset(i, 0, 0, 'inner')}
-				transform="rotate(-90 50 50)"
+				transform="rotate(-45 50 50)"
 			/>
 			{#each base.categories as category, j}
 				<circle
@@ -119,7 +119,7 @@
 					stroke-width={STROKEWIDTH.middle}
 					stroke-dasharray={`${base.percent * category.percent * CIRCUMFERENCES.middle} ${CIRCUMFERENCES.middle}`}
 					stroke-dashoffset={calculateOffset(i, j, 0, 'middle')}
-					transform="rotate(-90 50 50)"
+					transform="rotate(-45 50 50)"
 				/>
 				{#each category.indicators as indicator, k}
 					{#if k <= 3}
@@ -133,7 +133,7 @@
 							stroke-width={STROKEWIDTH.outer}
 							stroke-dasharray={`${base.percent * category.percent * indicator.percent * CIRCUMFERENCES.outer} ${CIRCUMFERENCES.outer}`}
 							stroke-dashoffset={calculateOffset(i, j, k, 'outer')}
-							transform="rotate(-90 50 50)"
+							transform="rotate(-45 50 50)"
 						/>
 					{/if}
 				{/each}
@@ -146,6 +146,6 @@
 		text-anchor="middle"
 		alignment-baseline="middle"
 		font-size="8"
-		font-weight="bold">2000 W/h</text
+		font-weight="bold">2000 W</text
 	>
 </svg>

@@ -1,13 +1,20 @@
 <script>
 	import Indicator from './indicator.svelte';
-	let { name, value, color, category } = $props();
+	import { updateCategoryValue } from './EvA.svelte.js';
+	let { name, value, category } = $props();
 </script>
 
 <div
 	style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem;"
 >
 	<h2 style="font-size: medium;">{name}</h2>
-	<input type="number" {name} {value} style="field-sizing: content; font-size: medium;" />
+	<input
+		type="number"
+		{name}
+		{value}
+		style="field-sizing: content; font-size: medium;"
+		onchange={(e) => updateCategoryValue(category.name, parseInt(e.target.value))}
+	/>
 </div>
 {#each category.indicators as ind}
 	<Indicator name={ind.name} value={ind.value} color={ind.color} indicator={ind} />

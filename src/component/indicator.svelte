@@ -1,12 +1,19 @@
 <script>
-	let { name, value, color, indicator } = $props();
+	import { updateIndicatorValue } from './EvA.svelte.js';
+	let { name, value, indicator } = $props();
 </script>
 
 <div
 	style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem;"
 >
 	<h3 style="font-size: x-small;">{name}</h3>
-	<input type="number" {name} {value} style="field-sizing: content; font-size: x-small;" />
+	<input
+		type="number"
+		{name}
+		{value}
+		style="field-sizing: content; font-size: x-small;"
+		onchange={(e) => updateIndicatorValue(indicator.name, parseInt(e.target.value))}
+	/>
 </div>
 
 <style>

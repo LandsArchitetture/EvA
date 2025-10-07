@@ -1,31 +1,16 @@
 <script>
-	let { data } = $props();
+	import EvA from './EvA.svelte.js';
+	import {
+		OFFSET,
+		RADIUS,
+		STROKEWIDTH,
+		CIRCUMFERENCES,
+		calculateOffsets
+	} from './diagram.svelte.js';
 
-	const RADIUS = {
-		inner: 26,
-		middle: 37,
-		outer: 46
-	};
-
-	const STROKEWIDTH = {
-		inner: 14,
-		middle: 10,
-		outer: 8
-	};
-
-	const CIRCUMFERENCES = {
-		inner: 2 * Math.PI * RADIUS.inner,
-		middle: 2 * Math.PI * RADIUS.middle,
-		outer: 2 * Math.PI * RADIUS.outer
-	};
+	calculateOffsets();
 
 	const COLORS = ['#0000FF', '#FFFF00', '#00FF00', '#FF0000'];
-
-	let OFFSET = {
-		inner: 0,
-		middle: 0,
-		outer: 0
-	};
 
 	function shadeColor(color, percent) {
 		var R = parseInt(color.substring(1, 3), 16);
@@ -59,43 +44,12 @@
 			return shadeColor(COLORS[i], -10 * k);
 		}
 	}
-	function calculateOffset(i, j, k, layer) {
-		let returnOffset;
-		let base;
-		let category;
-		let indicator;
-		switch (layer) {
-			case 'inner':
-				returnOffset = OFFSET.inner;
-				base = data.bases[i];
-				OFFSET.inner -= base.percent * CIRCUMFERENCES.inner;
-				return returnOffset;
-
-			case 'middle':
-				returnOffset = OFFSET.middle;
-				base = data.bases[i];
-				category = base.categories[j];
-				OFFSET.middle -= base.percent * category.percent * CIRCUMFERENCES.middle;
-				return returnOffset;
-
-			case 'outer':
-				returnOffset = OFFSET.outer;
-				base = data.bases[i];
-				category = base.categories[j];
-				indicator = category.indicators[k];
-				OFFSET.outer -= base.percent * category.percent * indicator.percent * CIRCUMFERENCES.outer;
-				return returnOffset;
-
-			default:
-				return 0;
-		}
-	}
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" height="80vh" style="flex-grow: 1;">
 	<!-- Basis -->
-	{#if data}
-		{#each data.bases as base, i}
+	{#if EvA}
+		{#each EvA.bases as base, i}
 			<circle
 				cx="50"
 				cy="50"
@@ -104,10 +58,11 @@
 				fill="none"
 				stroke={calculateColor(i, 0, 0, 'inner')}
 				stroke-width={STROKEWIDTH.inner}
-				stroke-dasharray={`${base.percent * CIRCUMFERENCES.inner} ${CIRCUMFERENCES.inner}`}
-				stroke-dashoffset={calculateOffset(i, 0, 0, 'inner')}
+				stroke-dasharray={`${base.percent * CIRCUMFERENCES.inner} ${CIRCUMFERENCES.inner * (1 - base.percent)}`}
+				stroke-dashoffset={-OFFSET.inner[i]}
 				transform="rotate(-45 50 50)"
 			/>
+			<!-- {#if i <= 0} -->
 			{#each base.categories as category, j}
 				<circle
 					cx="50"
@@ -117,27 +72,26 @@
 					fill="none"
 					stroke={calculateColor(i, j, 0, 'middle')}
 					stroke-width={STROKEWIDTH.middle}
-					stroke-dasharray={`${base.percent * category.percent * CIRCUMFERENCES.middle} ${CIRCUMFERENCES.middle}`}
-					stroke-dashoffset={calculateOffset(i, j, 0, 'middle')}
+					stroke-dasharray={`${base.percent * category.percent * CIRCUMFERENCES.middle} ${CIRCUMFERENCES.middle * (1 - base.percent * category.percent)}`}
+					stroke-dashoffset={-OFFSET.middle[i * 4 + j]}
 					transform="rotate(-45 50 50)"
 				/>
 				{#each category.indicators as indicator, k}
-					{#if k <= 3}
-						<circle
-							cx="50"
-							cy="50"
-							r={RADIUS.outer}
-							id={indicator.id}
-							fill="none"
-							stroke={calculateColor(i, j, k, 'outer')}
-							stroke-width={STROKEWIDTH.outer}
-							stroke-dasharray={`${base.percent * category.percent * indicator.percent * CIRCUMFERENCES.outer} ${CIRCUMFERENCES.outer}`}
-							stroke-dashoffset={calculateOffset(i, j, k, 'outer')}
-							transform="rotate(-45 50 50)"
-						/>
-					{/if}
+					<circle
+						cx="50"
+						cy="50"
+						r={RADIUS.outer}
+						id={indicator.id}
+						fill="none"
+						stroke={calculateColor(i, j, k, 'outer')}
+						stroke-width={STROKEWIDTH.outer}
+						stroke-dasharray={`${base.percent * category.percent * indicator.percent * CIRCUMFERENCES.outer} ${CIRCUMFERENCES.outer * (1 - base.percent * category.percent * indicator.percent)}`}
+						stroke-dashoffset={-OFFSET.outer[i * 16 + j * 4 + k]}
+						transform="rotate(-45 50 50)"
+					/>
 				{/each}
 			{/each}
+			<!-- {/if} -->
 		{/each}
 	{/if}
 	<text
@@ -146,6 +100,6 @@
 		text-anchor="middle"
 		alignment-baseline="middle"
 		font-size="8"
-		font-weight="bold">2000 W</text
+		font-weight="bold">{EvA.value + ' W'}</text
 	>
 </svg>

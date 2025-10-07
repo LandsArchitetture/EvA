@@ -1,6 +1,7 @@
 <script>
 	import Category from './category.svelte';
-	let { name, value, base, test } = $props();
+	import EvA, { calculate, updateBaseValue } from './EvA.svelte.js';
+	let { name, value, base } = $props();
 </script>
 
 <div style="display: flex; flex-direction: column; align-items: start;">
@@ -13,10 +14,7 @@
 			{name}
 			{value}
 			style="font-size: x-large; field-sizing: content;"
-			onchange={(e) => {
-				test += 1;
-				console.log('changed', e.target.value);
-			}}
+			onchange={(e) => updateBaseValue(base.name, parseInt(e.target.value))}
 		/>
 	</div>
 	{#each base.categories as cat}

@@ -1,8 +1,11 @@
-{
+import { calculateOffsets } from './diagram.svelte.js'
+
+
+const EvA = $state({
     "version": 0.0,
     "name": "EvA",
     "description": "Evaluation Algorithm",
-    "value": 100,
+    "value": 2000,
     "bases": [
         {
             "name": "Culture",
@@ -549,4 +552,43 @@
             ]
         }
     ]
+});
+
+export default EvA;
+
+export function calculate() {
+    EvA.bases.forEach(base => {
+        base.categories.forEach(cat => {
+            let indTotal = cat.indicators.reduce((acc, ind) => acc + ind.value, 0);
+            cat.indicators.forEach(ind => { ind.percent = ind.value / indTotal });
+        });
+        let catTotal = base.categories.reduce((acc, cat) => acc + cat.value, 0);
+        base.categories.forEach(cat => { cat.percent = cat.value / catTotal });
+    });
+    let baseTotal = EvA.bases.reduce((acc, base) => acc + base.value, 0);
+    EvA.bases.forEach(base => { base.percent = base.value / baseTotal });
+}
+
+export function print() {
+    console.log($state.snapshot(EvA));
+}
+
+export function updateBaseValue(baseName, newValue) {
+    EvA.bases.find(b => b.name === baseName).value = newValue;
+    calculate();
+    calculateOffsets();
+    print();
+}
+
+export function updateCategoryValue(categoryName, newValue) {
+    EvA.bases.flatMap(b => b.categories).find(c => c.name === categoryName).value = newValue;
+    calculate();
+    calculateOffsets();
+
+}
+
+export function updateIndicatorValue(indicatorName, newValue) {
+    EvA.bases.flatMap(b => b.categories).flatMap(c => c.indicators).find(i => i.name === indicatorName).value = newValue;
+    calculate();
+    calculateOffsets();
 }

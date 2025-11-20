@@ -1,6 +1,6 @@
 <script>
 	import Category from './category.svelte';
-	import EvA, { calculate, updateBaseValue } from './EvA.svelte.js';
+	import EvA, { calculate, updateBaseValue } from '../Stores/EvA.svelte.js';
 	let { name, value, base } = $props();
 </script>
 

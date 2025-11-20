@@ -1,12 +1,12 @@
 <script>
-	import EvA from './EvA.svelte.js';
+	import EvA from './Stores/EvA.svelte.js';
 	import {
 		OFFSET,
 		RADIUS,
 		STROKEWIDTH,
 		CIRCUMFERENCES,
 		calculateOffsets
-	} from './diagram.svelte.js';
+	} from './Stores/diagram.svelte.js';
 
 	calculateOffsets();
 

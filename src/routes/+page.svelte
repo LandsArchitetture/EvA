@@ -15,7 +15,7 @@
 	</div>
 
 	<!-- <Diagram {EvA} /> -->
-	<Watch {EvA} />
+	<Watch Eva={EvA} />
 
 	<div class="flex h-screen w-1/3 flex-grow flex-col justify-around text-center">
 		{#each EvA.bases.slice(2, 4) as base}

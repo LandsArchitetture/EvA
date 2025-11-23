@@ -577,7 +577,6 @@ export function updateBaseValue(baseName, newValue) {
     EvA.bases.find(b => b.name === baseName).value = newValue;
     calculate();
     calculateOffsets();
-    print();
 }
 
 export function updateCategoryValue(categoryName, newValue) {
